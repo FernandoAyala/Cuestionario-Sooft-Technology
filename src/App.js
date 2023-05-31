@@ -7,6 +7,7 @@ import {
   CardBody,
   CardHeader,
   Col,
+  Container,
   Form,
   FormGroup,
   Input,
@@ -15,6 +16,7 @@ import {
   Table,
 } from 'reactstrap';
 import EditarIdAsignado from './EditarIdAsignado';
+import { validaMail, validaNumero } from './Validadores';
 
 const App = () => {
   const [cuestionarios, setCuestionarios] = useState([]);
@@ -43,9 +45,9 @@ Parámetros de entrada: Un objeto JSON con la info de la asignación, que incluy
 Respuesta del servidor: El objeto JSON de la asignación guardada.
 
 3)Endpoint para actualizar una asignación de cuestionario:
-Método: PATCH
+Método: PUT
 URL: /api/asignaciones/:id
-Parámetros de entrada: El id_asignación a actualizar en la URL y en un objeto JSON la asignación del cambio de cuestionario.
+Parámetros de entrada: El id_asignación a actualizar en la URL y en un objeto JSON los cambios del objeto.
 Respuesta del servidor: El objeto JSON con la asignación actualizada.
 
 4)Endpoint para eliminar una asignación de cuestionario:
@@ -121,36 +123,32 @@ Respuesta del servidor: Un mensaje de que se elimino correctamente o el motivo d
     setAsignaciones(updatedAsignaciones);
   };
 
-  const validaMail = (mail) => {
-    // Expresión regular para validar el formato
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(mail).toLowerCase());
-  };
-
-  const validaNumero = (numero) => {
-    // Expresión regular para validar el formato
-    const re = /^\+[1-9]\d{1,14}$/;
-    return re.test(numero);
-  };
-
-  const onGuardar = (index, newSelectCuestionario) => {
-    console.log(newSelectCuestionario);
-    console.log(index);
+  const onGuardar = (index, datoEditado) => {
     // Creo un nuevo array asi cuando actualizo el campo se refresca la tabla
-    const newArray = [...asignaciones];
-    newArray[index].id_cuestionario = newSelectCuestionario;
+    const newArray = asignaciones.map((asignacion, i) => {
+      if (i === index) {
+        return { ...asignacion, ...datoEditado }; // Actualiza solo los campos editados
+      }
+      return asignacion; // campos sin cambios
+    });
     setAsignaciones(newArray);
-    console.log('guardado', asignaciones);
   };
-
-  console.log('guardado', asignaciones);
-
-  console.log('Daa', datos);
 
   return (
     <div className="animated fadeIn">
       <Card className="my-2">
-        <CardHeader>Sistema de Cuestionarios </CardHeader>
+        <Container fluid className="text-center mt-5">
+          <h2
+            style={{
+              fontFamily: 'Arial',
+              fontSize: '32px',
+              fontWeight: 'bold',
+            }}
+          >
+            Sistema de Cuestionarios
+          </h2>
+        </Container>
+        <CardHeader> Cuestionarios </CardHeader>
         <CardBody>
           <Row>
             <Col md={4}>
@@ -276,8 +274,8 @@ Respuesta del servidor: Un mensaje de que se elimino correctamente o el motivo d
                       </Button>
                       <EditarIdAsignado
                         cuestionarios={cuestionarios}
-                        onGuardar={(newSelectCuestionario) =>
-                          onGuardar(index, newSelectCuestionario)
+                        onGuardar={(datoEditado) =>
+                          onGuardar(index, datoEditado)
                         }
                         dato={asignacion}
                       />
