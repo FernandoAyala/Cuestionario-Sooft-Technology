@@ -3,7 +3,7 @@
 Desarrollo de una prueba técnica.
 
  /********* ENDPOINTS NECESARIOS *************/
-  /*
+
 1-Endpoint para obtener la lista de cuestionarios disponibles:
 Método: GET
 URL: /api/cuestionarios
@@ -27,4 +27,3 @@ Método: DELETE
 URL: /api/asignaciones/:id
 Parámetros de entrada: El id de la asignación a eliminar en la URL.
 Respuesta del servidor: Un mensaje de que se elimino correctamente o el motivo de por que no.
-*/
